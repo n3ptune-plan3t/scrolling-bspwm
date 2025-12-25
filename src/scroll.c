@@ -96,3 +96,19 @@ if (p != NULL) {
 
 return n;
 }
+
+int scroll_index(desktop_t *d, node_t *target)
+{
+    int i = 0;
+    for (node_t *n = first_extrema(d->root);
+         n != NULL;
+         n = next_leaf(n, d->root)) {
+
+        if (n == target) {
+            return i;
+        }
+        i++;
+    }
+    return -1;
+}
+
