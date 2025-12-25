@@ -163,7 +163,12 @@ bool manage_window(xcb_window_t win, rule_consequence_t *csq, int fd)
 		n->vacant = true;
 	}
 
-	f = insert_node(m, d, n, f);
+	if (d->layout == LAYOUT_SCROLL) {
+	f = insert_node_scroll(d, n);
+	} else {
+		f = insert_node(m, d, n, f);
+	}
+
 	clients_count++;
 	if (single_monocle && d->layout == LAYOUT_MONOCLE && tiled_count(d->root, true) > 1) {
 		set_layout(m, d, d->user_layout, false);
