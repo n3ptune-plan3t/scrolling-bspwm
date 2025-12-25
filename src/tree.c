@@ -1447,6 +1447,15 @@ void remove_node(monitor_t *m, desktop_t *d, node_t *n)
 	if (n == NULL) {
 		return;
 	}
+	
+	node_t *next_focus = NULL;
+
+	if (d->layout == LAYOUT_SCROLL && n != NULL) {
+	    next_focus = next_leaf(n, d->root);
+	    if (next_focus == NULL) {
+	        next_focus = prev_leaf(n, d->root);
+	    }
+	}
 
 	unlink_node(m, d, n);
 	history_remove(d, n, true);
@@ -1468,12 +1477,18 @@ void remove_node(monitor_t *m, desktop_t *d, node_t *n)
 	ewmh_update_client_list(false);
 	ewmh_update_client_list(true);
 
-	if (mon != NULL && d->focus == NULL) {
-		if (d == mon->desk) {
-			focus_node(m, d, NULL);
-		} else {
-			activate_node(m, d, NULL);
-		}
+	if (d->layout == LAYOUT_SCROLL && next_focus != NULL) {
+	    if (d == mon->desk) {
+	        focus_node(m, d, next_focus);
+	    } else {
+	        activate_node(m, d, next_focus);
+	    }
+	} else if (mon != NULL && d->focus == NULL) {
+	    if (d == mon->desk) {
+	        focus_node(m, d, NULL);
+	    } else {
+	        activate_node(m, d, NULL);
+	    }
 	}
 }
 
