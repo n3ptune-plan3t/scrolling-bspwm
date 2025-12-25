@@ -49,6 +49,9 @@ bool parse_layout(char *s, layout_t *l)
 	} else if (streq("tiled", s)) {
 		*l = LAYOUT_TILED;
 		return true;
+	} else if (streq(s, "scroll")) {
+	    *l = LAYOUT_SCROLL;
+	    return true;
 	}
 	return false;
 }
