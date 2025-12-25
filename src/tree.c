@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <limits.h>
+#include "scroll.h"
 #include "bspwm.h"
 #include "desktop.h"
 #include "ewmh.h"
@@ -45,7 +46,10 @@ void arrange(monitor_t *m, desktop_t *d)
 	if (d->root == NULL) {
 		return;
 	}
-
+    if (d->layout == LAYOUT_SCROLL) {
+        arrange_scroll(m, d);
+        return;
+    }
 	xcb_rectangle_t rect = m->rectangle;
 
 	rect.x += m->padding.left + d->padding.left;
