@@ -1752,6 +1752,28 @@ bool find_closest_node(coordinates_t *ref, coordinates_t *dst, cycle_dir_t dir, 
 	monitor_t *m = ref->monitor;
 	desktop_t *d = ref->desktop;
 	node_t *n = ref->node;
+	
+	if (d->layout == LAYOUT_SCROLL) {
+        if (dir == CYCLE_NEXT) {
+            n = next_leaf(n, d->root);
+            if (n == NULL) {
+                n = first_extrema(d->root);
+            }
+        } else {
+            n = prev_leaf(n, d->root);
+            if (n == NULL) {
+                n = second_extrema(d->root);
+            }
+        }
+
+        if (n != NULL) {
+            dst->monitor = m;
+            dst->desktop = d;
+            dst->node = n;
+            return true;
+        }
+        return false;
+    }
 	n = (dir == CYCLE_PREV ? prev_node(n) : next_node(n));
 
 #define HANDLE_BOUNDARIES(m, d, n)  \
